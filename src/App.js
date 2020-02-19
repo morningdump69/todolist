@@ -32,7 +32,6 @@ class App extends React.Component {
     let temp = this.state.list;
     temp.splice(index, 1);
     this.setState({ list: temp });
-    console.log("test");
   };
 
   render() {
@@ -59,9 +58,11 @@ class App extends React.Component {
         <div className="list">
           {this.state.list.map((savedInput, index) => {
             return (
-              <p key={index} onclick={() => this.removeHandler(index)}>
-                {savedInput}
-              </p>
+              <div className="box">
+                <p key={index} onClick={() => this.removeHandler(index)}>
+                  {savedInput}
+                </p>
+              </div>
             );
           })}
         </div>
