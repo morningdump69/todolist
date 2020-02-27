@@ -53,7 +53,7 @@ class App extends React.Component {
           onClick={this.onSubmit}
           disabled={isActive}
         >
-          add
+          add!
         </button>
         <div className="list">
           {this.state.list.map((savedInput, index) => {
