@@ -8,6 +8,13 @@ class App extends React.Component {
     errorText: "Please type something into the input box"
   };
 
+  componentDidMount = async () => {
+    const response = await fetch("http://localhost:3009/data");
+    const data = await response.json();
+    console.log(data);
+    this.setState({ list: data.data });
+  };
+
   changeHandler = event => {
     if (event.target.value === "") {
       this.setState({
@@ -24,14 +31,30 @@ class App extends React.Component {
 
   onSubmit = () => {
     let storeInput = this.state.list;
-    storeInput.push(this.state.inputText);
+    storeInput.push({ task: this.state.inputText });
     this.setState({ list: storeInput, inputText: "" });
+
+    fetch("http://localhost:3009/taskAdd", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        task: this.state.inputText
+      })
+    });
   };
 
-  removeHandler = index => {
+  removeHandler = (index, task) => {
     let temp = this.state.list;
     temp.splice(index, 1);
     this.setState({ list: temp });
+
+    fetch("http://localhost:3009/delete", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        task: task
+      })
+    });
   };
 
   render() {
@@ -59,8 +82,11 @@ class App extends React.Component {
           {this.state.list.map((savedInput, index) => {
             return (
               <div className="box">
-                <p key={index} onClick={() => this.removeHandler(index)}>
-                  {savedInput}
+                <p
+                  key={index}
+                  onClick={() => this.removeHandler(index, savedInput.task)}
+                >
+                  {savedInput.task}
                 </p>
               </div>
             );
